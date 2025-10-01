@@ -1,8 +1,10 @@
-import {Router} from "express"
-import userController = require("./user.controller")
+import { Router } from "express";
+import { UserControllers } from "./user.controller";
+
 
 const router = Router()
 
-router.post("/register", userController.UserControllers.createUser)
+router.post("/register", UserControllers.createUser)
+router.get("/all-users", UserControllers.getAllUsers)
 
 export const UserRoutes = router

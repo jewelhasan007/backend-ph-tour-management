@@ -19,7 +19,7 @@ export interface IAuthProvider{
     provider : string;  //"Google", "Credential"
     providerId: string;
 }
-export enum isActive {
+export enum IsActive {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE",
     BLOCKED = "BLOCKED"
@@ -32,7 +32,7 @@ export interface IUser {
     picture ?: string;
     address ?: string;
     isDeleted ?: string;
-    isActive ?: isActive;
+    isActive ?: IsActive;
     isVarified ?: string;
     role : Role;
     auths: IAuthProvider[];

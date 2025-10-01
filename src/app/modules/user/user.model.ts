@@ -1,7 +1,7 @@
 import {Schema} from "mongoose"
 import {IUser} from "./user.interface"
 import Role = require("./user.interface")
-import isActive = require("./user.interface")
+import IsActive = require("./user.interface")
 import mini = require("zod/mini")
 import type IAuthProvider = require("./user.interface")
 import { model } from "mongoose"
@@ -29,8 +29,8 @@ const userSchema = new Schema<IUser>({
     isDeleted: {type : String},
     isActive : {
         type: String,
-        enum : Object.values(isActive),
-        default: isActive.isActive,
+        enum : Object.values(IsActive),
+        default: IsActive.ACTIVE,
     },
     isVarified: {type: Boolean, default: false},
     auths : [authProviderSchema],
