@@ -9,7 +9,7 @@ let server: Server;
 const startServer =async () =>{
 try {
   
-    await mongoose.connect("mongodb+srv://L2_user:admin@cluster0.0frmz.mongodb.net/tour-management-backend?retryWrites=true&w=majority&appName=Cluster0")
+    await mongoose.connect("mongodb+srv://L2_user:admin@cluster0.0frmz.mongodb.net/tour-db?retryWrites=true&w=majority&appName=Cluster0")
 console.log("connected to DB!!")
 server = app.listen(envVars.PORT, ()=>{
     console.log(`Server is listening to port ${envVars.PORT}`);
