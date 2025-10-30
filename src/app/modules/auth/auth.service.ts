@@ -16,6 +16,11 @@ const {email, password} = payload;
           if(!isPasswordMatched){
              throw new AppError(httpStatus.BAD_REQUEST, "Incorrect Password")
           }
+          // const {password, ...rest} = isUserExist
+          
+          return {
+            email : isUserExist.email
+          }
 }
 
 export const AuthServices = {
