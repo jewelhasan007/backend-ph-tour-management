@@ -25,7 +25,7 @@ const jwtPayload = {
   role: isUserExist.role
 }
 const accessToken = jwt.sign(jwtPayload,"secret", {
-expiresIn: "1d"
+expiresIn: "2s"
 })
 
           return {
