@@ -4,7 +4,7 @@ import  {UserRoutes}  from "../modules/user/user.route"
 import path from "path"
 import { AuthRoutes } from "../modules/auth/auth.route"
 
-const router = Router()
+export const router = Router()
 
 const moduleRoutes = [
     {
