@@ -10,7 +10,7 @@ import { verifyToken } from "../../utils/jwt";
 import { envVars } from "../../config/env";
 const router = Router()
 
-const checkAuth = () => async(req: Request, res: Response, next: NextFunction) =>{
+const checkAuth = (...authRoles : string[]) => async(req: Request, res: Response, next: NextFunction) =>{
     try {
         const accessToken = req.headers.authorization
         if(!accessToken){
@@ -18,13 +18,15 @@ const checkAuth = () => async(req: Request, res: Response, next: NextFunction) =
         }
 
         // const verifiedToken = jwt.verify(accessToken, "secret")
-        const verifiedToken = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET)
+        const verifiedToken = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET) as JwtPayload
         console.log(verifiedToken)
 
         // if(!verifiedToken){
         //      throw new AppError(403, `You are not authorized ${verifiedToken}`)
         // }
-        if((verifiedToken as JwtPayload).role !== Role.ADMIN ){
+        // authRoles = ["ADMIN", "SUPER-ADMIN"].includes("ADMIN")
+        // if((verifiedToken as JwtPayload).role !== Role.ADMIN ){
+        if(authRoles.includes(verifiedToken.role)){
              throw new AppError(403, "You are not permitted to view this role!!!!")
         }
         next()

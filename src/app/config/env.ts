@@ -27,7 +27,7 @@ const loadEnvVariables = () : EnvConfig =>{
         NODE_ENV: process.env.NODE_ENV as "development" | "production",
         BCRYPT_SALT_ROUND : process.env.BCRYPT_SALT_ROUND as string,
         JWT_ACCESS_SECRET : process.env.JWT_ACCESS_SECRET as string,
-        BCRYPT_SALT_ROUND : process.env.BCRYPT_SALT_ROUND as string
+        JWT_ACCESS_EXPIRE : process.env.JWT_ACCESS_EXPIRE as string
     }
 }
 
