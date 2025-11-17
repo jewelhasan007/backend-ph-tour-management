@@ -9,12 +9,14 @@ import { Role } from "./user.interface";
 import { verifyToken } from "../../utils/jwt";
 import { envVars } from "../../config/env";
 import { checkAuth } from "../../middleware/checkAuth";
+import { AuthControllers } from "../auth/auth.controller";
 const router = Router()
 
 
 
 router.post("/register", validateRequest(createZodSchema),UserControllers.createUser);
-router.get("/all-users", checkAuth(Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.getAllUsers)
+router.get("/all-users", checkAuth(Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.getAllUsers);
+router.patch("/:id", checkAuth(...Object.values(Role)), UserControllers.updateUser)
 
 export const UserRoutes = router
 // export default router
