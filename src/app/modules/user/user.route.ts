@@ -8,35 +8,15 @@ import jwt, { JwtPayload } from "jsonwebtoken"
 import { Role } from "./user.interface";
 import { verifyToken } from "../../utils/jwt";
 import { envVars } from "../../config/env";
+import { checkAuth } from "../../middleware/checkAuth";
+import { AuthControllers } from "../auth/auth.controller";
 const router = Router()
 
-const checkAuth = () => async(req: Request, res: Response, next: NextFunction) =>{
-    try {
-        const accessToken = req.headers.authorization
-        if(!accessToken){
-            throw new AppError(403, "No Token Received")
-        }
 
-        // const verifiedToken = jwt.verify(accessToken, "secret")
-        const verifiedToken = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET)
-        console.log(verifiedToken)
-
-        // if(!verifiedToken){
-        //      throw new AppError(403, `You are not authorized ${verifiedToken}`)
-        // }
-        if((verifiedToken as JwtPayload).role !== Role.ADMIN ){
-             throw new AppError(403, "You are not permitted to view this role!!!!")
-        }
-        next()
-
-    } catch (error) {
-        console.log("jwt error", error)
-        next(error)
-    }
-}
 
 router.post("/register", validateRequest(createZodSchema),UserControllers.createUser);
-router.get("/all-users", checkAuth("ADMIN", "SUPER_ADMIN") , UserControllers.getAllUsers)
+router.get("/all-users", checkAuth(Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.getAllUsers);
+router.patch("/:id", checkAuth(...Object.values(Role)), UserControllers.updateUser)
 
 export const UserRoutes = router
 // export default router
