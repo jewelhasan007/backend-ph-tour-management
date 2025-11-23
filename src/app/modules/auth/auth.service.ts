@@ -28,9 +28,14 @@ const jwtPayload = {
 }
 const accessToken = generateToken(payload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRE)
 
+const refreshToken = generateToken(payload, envVars.JWT_REFRESH_SECRET, envVars.JWT_REFRESH_EXPIRES)
+delete isUserExist.password;
+const {password :  pass, ...rest} = isUserExist
 
-          return {
-            accessToken
+return {
+            accessToken,
+            refreshToken,
+            user: rest
           }
 }
 
