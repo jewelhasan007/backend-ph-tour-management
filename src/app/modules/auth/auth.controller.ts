@@ -22,7 +22,20 @@ const credentialLogin =  catchAsysnc(async(req: Request, res: Response, next: Ne
        
     })
 })
+const getNewAccessoken =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+    const refreshToken = req.headers.authorization
+    const tokenInfo = await AuthServices.getNewAccessToken(refreshToken as string) 
+
+    sendResponse(res, {
+         success: true,
+        statusCode: httpStatus.OK,
+        message: "Login Successfully",
+        data: tokenInfo,
+       
+    })
+})
 
 export const AuthControllers = {
-    credentialLogin
+    credentialLogin,
+    getNewAccessoken
 }
