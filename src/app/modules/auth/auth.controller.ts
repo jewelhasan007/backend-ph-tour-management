@@ -34,7 +34,7 @@ const credentialLogin =  catchAsysnc(async(req: Request, res: Response, next: Ne
     })
 })
 const getNewAccessoken =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = await req.cookies.refreshToken;
 
     if(!refreshToken){
         throw new AppError(httpStatus.BAD_REQUEST, "No refresh token received from cookies")
@@ -50,13 +50,36 @@ setAuthCookie(res, tokenInfo)
     sendResponse(res, {
          success: true,
         statusCode: httpStatus.OK,
-        message: "Login Successfully",
+        message: "New Access token created Successfully",
         data: tokenInfo,
+       
+    })
+})
+const logout =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+
+res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax"
+})
+res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax"
+})
+
+
+    sendResponse(res, {
+         success: true,
+        statusCode: httpStatus.OK,
+        message: "User Logged Out Successfully",
+        data: null,
        
     })
 })
 
 export const AuthControllers = {
     credentialLogin,
-    getNewAccessoken
+    getNewAccessoken,
+    logout
 }
