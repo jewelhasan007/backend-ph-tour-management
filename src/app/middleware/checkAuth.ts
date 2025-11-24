@@ -13,8 +13,7 @@ export const checkAuth = (...authRoles : string[]) => async(req: Request, res: R
 
         // const verifiedToken = jwt.verify(accessToken, "secret")
         const verifiedToken = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET) as JwtPayload
-        console.log(verifiedToken)
-
+  
         // if(!verifiedToken){
         //      throw new AppError(403, `You are not authorized ${verifiedToken}`)
         // }
@@ -23,6 +22,7 @@ export const checkAuth = (...authRoles : string[]) => async(req: Request, res: R
         if(authRoles.includes(verifiedToken.role)){
              throw new AppError(403, "You are not permitted to view this role!!!!")
         }
+        req.user = verifiedToken
         next()
 
     } catch (error) {

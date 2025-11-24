@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { UserControllers } from "./user.controller";
-import { createZodSchema } from "./user.validation";
+import { createZodSchema, updateUserZodSchema } from "./user.validation";
 import { AnyZodObject } from "zod/v3";
 import { validateRequest } from "../../middleware/validateRequest";
 import AppError from "../../errorHelpers/AppErrors";
@@ -16,7 +16,7 @@ const router = Router()
 
 router.post("/register", validateRequest(createZodSchema),UserControllers.createUser);
 router.get("/all-users", checkAuth(Role.ADMIN, Role.SUPER_ADMIN) , UserControllers.getAllUsers);
-router.patch("/:id", checkAuth(...Object.values(Role)), UserControllers.updateUser)
+router.patch("/:id",validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserControllers.updateUser)
 
 export const UserRoutes = router
 // export default router
