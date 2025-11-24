@@ -5,6 +5,7 @@ import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from "http-status-codes"
 import { AuthServices } from "./auth.service"
 import AppError from "../../errorHelpers/AppErrors"
+import { setAuthCookie } from "../../utils/setCookie"
 
 const credentialLogin =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
         //    const user = await UserServices.CreateUser(req.body) 
@@ -14,15 +15,16 @@ const credentialLogin =  catchAsysnc(async(req: Request, res: Response, next: Ne
     // })
 
     const loginInfo = await AuthServices.credentialLogin(req.body)
-    res.cookie("accessToken", loginInfo.accessToken, {
-        httpOnly: true,
-        secure: false
-    })
-    res.cookie("refreshToken", loginInfo.refreshToken,{
-        httpOnly: true,
-        secure: false
-    })
+    // res.cookie("accessToken", loginInfo.accessToken, {
+    //     httpOnly: true,
+    //     secure: false
+    // })
 
+    // res.cookie("refreshToken", loginInfo.refreshToken,{
+    //     httpOnly: true,
+    //     secure: false
+    // })
+    setAuthCookie(res, loginInfo)
     sendResponse(res, {
          success: true,
         statusCode: httpStatus.OK,
@@ -39,6 +41,12 @@ const getNewAccessoken =  catchAsysnc(async(req: Request, res: Response, next: N
     }
     const tokenInfo = await AuthServices.getNewAccessToken(refreshToken as string) 
 
+    //    res.cookie("accessToken", tokenInfo.accessToken, {
+    //     httpOnly: true,
+    //     secure: false
+    // })
+
+setAuthCookie(res, tokenInfo)
     sendResponse(res, {
          success: true,
         statusCode: httpStatus.OK,
