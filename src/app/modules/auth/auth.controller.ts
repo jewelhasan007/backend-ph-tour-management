@@ -68,6 +68,15 @@ res.clearCookie("refreshToken", {
     sameSite: "lax"
 })
 
+    sendResponse(res, {
+         success: true,
+        statusCode: httpStatus.OK,
+        message: "User Logged Out Successfully",
+        data: null,
+       
+    })
+})
+const resetPassword =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
 
     sendResponse(res, {
          success: true,
