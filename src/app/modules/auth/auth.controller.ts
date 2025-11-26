@@ -78,10 +78,18 @@ res.clearCookie("refreshToken", {
 })
 const resetPassword =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
 
+const newPassword = req.body.newPassword;
+const oldPassword = req.body.oldPassword;
+const decodedToken = req.user
+console.log("user is =", req)
+console.log("decoded token is",decodedToken)
+
+await AuthServices.resetPassword(oldPassword, newPassword, decodedToken)
+
     sendResponse(res, {
-         success: true,
+        success: true,
         statusCode: httpStatus.OK,
-        message: "User Logged Out Successfully",
+        message: "Password changed Successfully",
         data: null,
        
     })
@@ -90,5 +98,6 @@ const resetPassword =  catchAsysnc(async(req: Request, res: Response, next: Next
 export const AuthControllers = {
     credentialLogin,
     getNewAccessoken,
-    logout
+    logout,
+    resetPassword
 }

@@ -50,6 +50,25 @@ return {
             
           }
 }
+const resetPassword = async (oldPassword : string, newPassword: string, decodedToken : JwtPayload) => {
+
+    if (!decodedToken || !decodedToken.userID) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Invalid token");
+  }
+  
+const user = await User.findById(decodedToken.userID)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const isOldPasswordMatch = await bcryptjs.compare(oldPassword, user!.password as string)
+  if(!isOldPasswordMatch){
+    throw new AppError(httpStatus.UNAUTHORIZED, "Old password doesn't match")
+  }
+
+user!.password = await bcryptjs.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
+user!.save()
+
+
+}
 
 // user -ogin - token(email, role, _id) - booking/ payment / booking/ payment cancel 
 
@@ -57,4 +76,5 @@ return {
 export const AuthServices = {
     credentialLogin,
     getNewAccessToken,
+    resetPassword
 }
