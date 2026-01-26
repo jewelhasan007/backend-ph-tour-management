@@ -18,14 +18,18 @@ const credentialLogin =  catchAsysnc(async(req: Request, res: Response, next: Ne
     // })
 passport.authenticate("local", async(err: any, user:any, info) => {
 if(err){
+    // ❌❌❌❌
     // return next(err)
     // return new AppError(401, err)
     // return (err)
-    throw new AppError(401, "Some error")
+   
+    // ✅✅✅✅
+    // throw new AppError(401, "Some error")
+     return next(new AppError(401, err))
 }
 
 if(!user){
-    return new AppError(401, info.message)
+    return next(new AppError(401, info.message))
 }
 
 const userTokens = await createUserTokens(user)
@@ -45,7 +49,7 @@ const {password: pass, ...rest} = user.toObject()
        
     })
 
-})(res, req, next)
+})(req, res, next)
 
     // const loginInfo = await AuthServices.credentialLogin(req.body)
     // res.cookie("accessToken", loginInfo.accessToken, {
