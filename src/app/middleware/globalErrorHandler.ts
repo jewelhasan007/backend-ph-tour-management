@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppErrors";
 import { error } from "console";
+import path from "path";
 
 export const globalErrorHandler = (err:any, req: Request, res: Response, next: NextFunction )=>{
 
@@ -30,6 +31,17 @@ else if(err.name === "CastError"){
     statusCode = 400;
     message = "Invalid mongoDB ObjectID, Please provide a valid id"
 }
+else if(err.name === "ZodError"){
+    statusCode = 400;
+    message = "Zod Error"
+    console.log(err.issues)
+    err.issues.forEach((issue : any) =>{
+        errorSources.push({
+            path: issue.path[issue.path.length - 1],
+            message : issue.message
+        })
+    })
+}
 
 else if (err.name === "ValidationError"){
 statusCode = 400;
@@ -44,6 +56,8 @@ errors.forEach((errorObject: any) => errorSources.push({
 
 message = err.message
 }
+
+
 else if(err instanceof AppError){
     statusCode = err.statusCode
     message = err.message
@@ -57,7 +71,7 @@ res.status(statusCode).json({
     success: false,
     message: message,
     errorSources,
-    // err,
+    err,
     // stack: err.stack
     stack: envVars.NODE_ENV === "development" ? err.stack : null
 })
