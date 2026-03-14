@@ -3,9 +3,18 @@ import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppErrors";
 import { error } from "console";
 import path from "path";
+import mongoose from "mongoose";
+import { TErrorSources, TGenericErrorResponse } from "../interfaces/errorTypes";
+import { handlDuplicateError } from "../helpers/handleDuplicateError";
+import { handleCastError } from "../helpers/handleCastError";
+import { handleValidationError } from "../helpers/handleValidationError";
+import { handleZodError } from "../helpers/handleZodError";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const globalErrorHandler = (err:any, req: Request, res: Response, next: NextFunction )=>{
-
+if(envVars.NODE_ENV === "development"){
+    console.log(err)
+}
 let statusCode = 500
 let message = `something went wrong!!! ${err.message} `
 
@@ -13,48 +22,42 @@ let message = `something went wrong!!! ${err.message} `
 // duplicate Error
 // cast error,
 // 
-const errorSources : any = [
+let errorSources : TErrorSources[] = [
 //     {
 //     path : "isDeleted",
 //     message: "Cast Failure"
 // }
 ]
+
+
 if(err.code === 1100){
     console.log("Duplicate error", err.message);
-    const duplicate = err.message.match(/"([^"]*)"/)
-    console.log(duplicate);
-    statusCode = 400;
-    message = `${duplicate[1]} already exists!!`
+ 
+    const simplifiedError = handlDuplicateError(err)
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message
 } 
 // CastError/ Object ID error
 else if(err.name === "CastError"){
-    statusCode = 400;
-    message = "Invalid mongoDB ObjectID, Please provide a valid id"
+   const simplifiedError = handleCastError(err)
+   statusCode = simplifiedError.statusCode;
+   message = simplifiedError.message
 }
 else if(err.name === "ZodError"){
-    statusCode = 400;
-    message = "Zod Error"
-    console.log(err.issues)
-    err.issues.forEach((issue : any) =>{
-        errorSources.push({
-            path: issue.path[issue.path.length - 1],
-            message : issue.message
-        })
-    })
+    const simplifiedError = handleZodError(err)
+    statusCode = simplifiedError.statusCode
+    message = simplifiedError.message
+   errorSources = simplifiedError.errorSources
 }
-
+// mongoose validation error 
 else if (err.name === "ValidationError"){
-statusCode = 400;
-const errors = Object.values(err.errors);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const simplifiedError = handleValidationError(err)
+statusCode = simplifiedError.statusCode;
+errorSources = simplifiedError.errorSources as TErrorSources;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-errors.forEach((errorObject: any) => errorSources.push({
-    path: errorObject.path,
-    message: errorObject.message
-}))
 
-message = err.message
+message = simplifiedError.message
 }
 
 
@@ -71,7 +74,7 @@ res.status(statusCode).json({
     success: false,
     message: message,
     errorSources,
-    err,
+    err : envVars.NODE_ENV === "development" ? err: null,
     // stack: err.stack
     stack: envVars.NODE_ENV === "development" ? err.stack : null
 })
