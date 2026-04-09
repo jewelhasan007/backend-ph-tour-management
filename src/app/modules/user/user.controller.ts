@@ -6,7 +6,7 @@ import httpStatus from "http-status-codes"
 import { UserServices } from "./user.service";
 import AppError from "../../errorHelpers/AppErrors";
 import httpStatus from "http-status-codes"
-import { catchAsysnc } from "../../utils/catchAsync";
+import { catchAsync } from "../../utils/catchAsync";
 import { success } from "zod";
 import { sendResponse } from "../../utils/sendResponse";
 import {verifyToken} from "../../utils/jwt";
@@ -38,7 +38,7 @@ import { JwtPayload } from "jsonwebtoken";
 //     // })
 // }
 // }
-const createUser =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+const createUser =  catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
            const user = await UserServices.CreateUser(req.body) 
     // res.status(httpStatus.CREATED).json({
     //     message: "User created successfully",
@@ -53,7 +53,7 @@ const createUser =  catchAsysnc(async(req: Request, res: Response, next: NextFun
        
     })
 })
-const updateUser =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+const updateUser =  catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
     const userId = req.params.id;
     // const token = req.headers.authorization;
     // const verifiedToken = verifyToken(token as string , envVars.JWT_ACCESS_SECRET) as JwtPayload
@@ -76,7 +76,7 @@ const updateUser =  catchAsysnc(async(req: Request, res: Response, next: NextFun
     })
 })
 
-const getAllUsers = catchAsysnc(async(req: Request, res: Response, next: NextFunction)=>{
+const getAllUsers = catchAsync(async(req: Request, res: Response, next: Request.NextFunction)=>{
     const result = await UserServices.getAllUsers();
     // res.status(httpStatus.OK).json({
     //     success: true,

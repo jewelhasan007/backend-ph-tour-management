@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express"
-import { catchAsysnc } from "../../utils/catchAsync"
+import { catchAsync } from "../../utils/catchAsync"
 import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from "http-status-codes"
 import { AuthServices } from "./auth.service"
@@ -10,7 +10,7 @@ import { createUserTokens } from "../../utils/userTokens"
 import { envVars } from "../../config/env"
 import passport from "passport"
 
-const credentialLogin =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+const credentialLogin =  catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
         //    const user = await UserServices.CreateUser(req.body) 
     // res.status(httpStatus.CREATED).json({
     //     message: "User created successfully",
@@ -63,7 +63,7 @@ const {password: pass, ...rest} = user.toObject()
     // })
    
 })
-const getNewAccessoken =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+const getNewAccessoken =  catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
     const refreshToken = await req.cookies.refreshToken;
 
     if(!refreshToken){
@@ -85,7 +85,7 @@ setAuthCookie(res, tokenInfo)
        
     })
 })
-const logout =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+const logout =  catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
 
 res.clearCookie("accessToken", {
     httpOnly: true,
@@ -106,7 +106,7 @@ res.clearCookie("refreshToken", {
        
     })
 })
-const resetPassword =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+const resetPassword =  catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
 
 const newPassword = req.body.newPassword;
 const oldPassword = req.body.oldPassword;
@@ -123,7 +123,7 @@ await AuthServices.resetPassword(oldPassword, newPassword, decodedToken)
        
     })
 })
-const googleCallbackController =  catchAsysnc(async(req: Request, res: Response, next: NextFunction)=> {
+const googleCallbackController =  catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
 
 let redirectTo = req.query.state ? req.query.state as string : ""  
 if(redirectTo.startsWith("/")){
