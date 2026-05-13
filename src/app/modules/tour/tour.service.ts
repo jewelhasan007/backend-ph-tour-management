@@ -95,6 +95,7 @@ const createTour = async (payload: ITour) => {
 //         meta: meta
 //     }
 // };
+// update the 30-4
 
 const getAllTours = async (query: Record<string, string>) => {
 
@@ -114,6 +115,7 @@ const getAllTours = async (query: Record<string, string>) => {
         tours.build(),
         queryBuilder.getMeta()
     ])
+    
 
     return {
         data,
